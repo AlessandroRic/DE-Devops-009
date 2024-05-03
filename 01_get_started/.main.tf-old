@@ -1,0 +1,33 @@
+// Provedor AWS
+provider "aws" {
+    region                      = "us-east-1"  // Região da AWS
+    access_key                  = "mock_access_key"  // Chave de acesso
+    secret_key                  = "mock_access_key"  // Chave secreta
+    s3_use_path_style           = true  // Usar estilo de caminho para o S3
+    skip_credentials_validation = true  // Pular validação de credenciais
+    skip_metadata_api_check     = true  // Pular verificação da API de metadados
+    skip_requesting_account_id  = true  // Pular solicitação do ID da conta
+    endpoints {
+        s3 = "http://localhost:4566"  // Endpoint do S3
+    }
+}
+
+// Recurso AWS S3 - nome_do_recurso_para_terraform_1
+resource "aws_s3_bucket" "nome_do_recurso_para_terraform_1" {
+    bucket = "bucket-time-caixa"  // Nome do bucket
+}
+
+// Recurso AWS S3 - nome_do_recurso_para_terraform_2
+resource "aws_s3_bucket" "nome_do_recurso_para_terraform_2" {
+    bucket = "bucket-time-caixa2"  // Nome do bucket
+}
+
+// Recurso AWS S3 - nome_do_recurso_para_terraform_3
+resource "aws_s3_bucket" "nome_do_recurso_para_terraform_3" {
+    bucket = "bucket-time-caixa3"  // Nome do bucket
+}
+
+// Recurso AWS S3 - nome_do_recurso_para_terraform_4
+resource "aws_s3_bucket" "nome_do_recurso_para_terraform_4" {
+    bucket = "bucket-time-caixa4"  // Nome do bucket
+}
