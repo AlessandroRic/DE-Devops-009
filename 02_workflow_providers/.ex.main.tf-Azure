@@ -1,0 +1,77 @@
+// Define o provider que será usado, neste caso, o Azure Resource Manager (azurerm)
+provider "azurerm" {
+  features {}  // Necessário para definir recursos específicos do provider; está vazio porque não são necessárias configurações adicionais
+}
+
+// Cria um grupo de recursos no Azure, que é um container que agrupa recursos relacionados para gerenciamento
+resource "azurerm_resource_group" "example" {
+  name     = "example-resources"  // Nome do grupo de recursos
+  location = "East US"            // Localização/região do grupo de recursos
+}
+
+// Cria uma rede virtual dentro do grupo de recursos definido anteriormente
+resource "azurerm_virtual_network" "example" {
+  name                = "example-vnet"  // Nome da rede virtual
+  address_space       = ["10.0.0.0/16"]  // Espaço de endereçamento IP da rede
+  location            = azurerm_resource_group.example.location  // Herda a localização do grupo de recursos
+  resource_group_name = azurerm_resource_group.example.name  // Herda o nome do grupo de recursos
+}
+
+// Cria uma sub-rede dentro da rede virtual definida anteriormente
+resource "azurerm_subnet" "example" {
+  name                 = "internal"  // Nome da sub-rede
+  resource_group_name  = azurerm_resource_group.example.name  // Herda o nome do grupo de recursos
+  virtual_network_name = azurerm_virtual_network.example.name  // Herda o nome da rede virtual
+  address_prefixes     = ["10.0.1.0/24"]  // Define o intervalo de IPs disponíveis na sub-rede
+}
+
+// Cria um IP público que pode ser associado a uma máquina virtual ou outra instância
+resource "azurerm_public_ip" "example" {
+  name                = "example-publicip"  // Nome do IP público
+  location            = azurerm_resource_group.example.location  // Herda a localização do grupo de recursos
+  resource_group_name = azurerm_resource_group.example.name  // Herda o nome do grupo de recursos
+  allocation_method   = "Dynamic"  // Método de alocação do IP (pode ser 'Static' ou 'Dynamic')
+}
+
+// Cria uma interface de rede que pode ser associada a máquinas virtuais
+resource "azurerm_network_interface" "example" {
+  name                = "example-nic"  // Nome da interface de rede
+  location            = azurerm_resource_group.example.location  // Herda a localização do grupo de recursos
+  resource_group_name = azurerm_resource_group.example.name  // Herda o nome do grupo de recursos
+
+  ip_configuration {  // Configurações de IP para a interface
+    name                          = "internal"  // Nome da configuração
+    subnet_id                     = azurerm_subnet.example.id  // Associa a sub-rede criada anteriormente
+    private_ip_address_allocation = "Dynamic"  // Alocação dinâmica de IP privado
+    public_ip_address_id          = azurerm_public_ip.example.id  // Associa o IP público criado anteriormente
+  }
+}
+
+// Cria uma máquina virtual Linux no Azure
+resource "azurerm_linux_virtual_machine" "example" {
+  name                = "example-vm"  // Nome da máquina virtual
+  resource_group_name = azurerm_resource_group.example.name  // Herda o nome do grupo de recursos
+  location            = azurerm_resource_group.example.location  // Herda a localização do grupo de recursos
+  size                = "Standard_DS1_v2"  // Tamanho da VM, define CPU, memória, etc.
+  admin_username      = "adminuser"  // Nome de usuário administrador da VM
+  network_interface_ids = [
+    azurerm_network_interface.example.id,  // Associa a interface de rede criada anteriormente
+  ]
+
+  os_disk {  // Configura o disco do sistema operacional
+    caching              = "ReadWrite"  // Tipo de cache do disco
+    storage_account_type = "Standard_LRS"  // Tipo de conta de armazenamento (LRS = Local Redundant Storage)
+  }
+
+  source_image_reference {  // Referência à imagem do sistema operacional
+    publisher = "Canonical"  // Publicador da imagem
+    offer     = "UbuntuServer"  // Oferta da imagem
+    sku       = "18.04-LTS"  // SKU da imagem
+    version   = "latest"  // Versão da imagem
+  }
+
+  admin_ssh_key {  // Chave SSH para acesso à VM
+    username   = "adminuser"  // Nome de usuário para o qual a chave será aplicada
+    public_key = file("~/.ssh/id_rsa.pub")  // Caminho para a chave pública SSH
+  }
+}
