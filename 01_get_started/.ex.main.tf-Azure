@@ -2,7 +2,7 @@ provider "azurerm" {
     features {}
 }
 
-resource "azurerm_storage_account" "nome_do_recurso_para_terraform_1" {
+resource "azurerm_storage_account" "recursoterraform1" {
     name                     = "bucket-time-caixa"
     resource_group_name      = "nome_do_grupo_de_recursos"
     location                 = "nome_da_região"
@@ -10,7 +10,7 @@ resource "azurerm_storage_account" "nome_do_recurso_para_terraform_1" {
     account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_account" "nome_do_recurso_para_terraform_2" {
+resource "azurerm_storage_account" "recursoterraform2" {
     name                     = "bucket-time-caixa2"
     resource_group_name      = "nome_do_grupo_de_recursos"
     location                 = "nome_da_região"
@@ -18,7 +18,7 @@ resource "azurerm_storage_account" "nome_do_recurso_para_terraform_2" {
     account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_account" "nome_do_recurso_para_terraform_3" {
+resource "azurerm_storage_account" "recursoterraform3" {
     name                     = "bucket-time-caixa3"
     resource_group_name      = "nome_do_grupo_de_recursos"
     location                 = "nome_da_região"
@@ -26,7 +26,7 @@ resource "azurerm_storage_account" "nome_do_recurso_para_terraform_3" {
     account_replication_type = "LRS"
 }
 
-resource "azurerm_storage_account" "nome_do_recurso_para_terraform_4" {
+resource "azurerm_storage_account" "recursoterraform4" {
     name                     = "bucket-time-caixa4"
     resource_group_name      = "nome_do_grupo_de_recursos"
     location                 = "nome_da_região"
