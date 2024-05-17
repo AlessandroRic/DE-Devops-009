@@ -15,6 +15,11 @@ module "s3_bucket" {
   bucket_name = "${var.project_name}-${random_id.bucket_suffix.hex}"
 }
 
+module "s3_bucket_1" {
+  source      = "./s3_module"
+  bucket_name = "${var.project_name}-${random_id.bucket_suffix.hex}"
+}
+
 resource "random_id" "bucket_suffix" {
   byte_length = 2
 }
